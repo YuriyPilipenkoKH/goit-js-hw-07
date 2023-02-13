@@ -8,7 +8,7 @@ function createItemsMarkup(item) {
   return galleryItems
     .map(({ preview, original, description }) => {
       return `<div class="gallery__item">
-      <a class="gallery__link" href="${original.value}">
+      <a class="gallery__link" href="large-image.jpg">
         <img
           class="gallery__image"
           src="${preview}"
