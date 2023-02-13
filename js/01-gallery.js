@@ -1,57 +1,44 @@
 import { galleryItems } from './gallery-items.js';
-// Change code below this line
 
-const refs = {
-    gallery: document.querySelector('.gallery'),
-};
-const elAll = [];
-let url;
+const imageGallery = document.querySelector('.gallery');
 
-galleryItems.map(galleryItem => {
-    const elA = document.createElement('a');
-    elA.classList.add('gallery__link');
-    elA.setAttribute('href', galleryItem.original);
-    
-    const elImg = document.createElement('img');
-    elImg.classList.add('gallery__image');
-    elImg.setAttribute('src', galleryItem.preview);
-    elImg.setAttribute('data-src', galleryItem.original)
-    elImg.setAttribute('alt', galleryItem.description);
-
-    elA.appendChild(elImg);
-    elAll.push(elA);
-});
+const cardsMarkup = createImageGallery(galleryItems);
+imageGallery.innerHTML = cardsMarkup
+imageGallery.addEventListener('click',onPhotoClick)
 
 
-refs.gallery.append(...elAll);
+function createImageGallery(galleryItems) {
+    return galleryItems.map((gallery) => {
+        return `
+            <div class="gallery__item">
+                <a class="gallery__link" href="large-image.jpg">
+                <img
+                    class="gallery__image"
+                    src="${gallery.preview}"
+                    data-source="${gallery.original}"
+                    alt="${gallery.description}"
+                />
+                </a>
+            </div>`;
+        })
+        .join('');
+    }
+ 
+function onPhotoClick(e) {
 
-refs.gallery.addEventListener('click', (e) => {
-    if (e.target.nodeName === "IMG") {
-        getUrlImg(e);
-
-        const instance = basicLightbox.create(`<img width="1400" height="900" src="${url}">`);
-
-        openModal(instance);
-
-        window.addEventListener('keyup', (e) => {
-            if(e.code === "Escape") {
-                closeModal(instance);
-            };
-        },{ once: true });
-    };
-});
-
-function getUrlImg(e){
     e.preventDefault();
-    const target = e.target;
-    url = target.dataset.src;
+    if (e.target.nodeName !== "IMG") {
+        return;
+    }
+    const instance = basicLightbox.create(`
+    <img src="${e.target.dataset.source}">
+    `)
+    instance.show();
+
+    imageGallery.addEventListener('keydown', (e) => {
+        if (e.code === "Escape") {
+            instance.close()
+        }
+    });
 };
 
-
-function openModal(a){
-	a.show()
-}
-
-function closeModal(a){
-    a.close()
-}
