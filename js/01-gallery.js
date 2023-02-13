@@ -22,6 +22,7 @@ galleryItems.map(galleryItem => {
     elAll.push(elA);
 });
 
+
 refs.gallery.append(...elAll);
 
 refs.gallery.addEventListener('click', (e) => {
