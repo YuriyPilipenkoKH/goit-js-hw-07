@@ -1,44 +1,35 @@
 import { galleryItems } from './gallery-items.js';
 
-const imageGallery = document.querySelector('.gallery');
+const galleryContainerEl = document.querySelector(".gallery");
+const imagesMarkup = createItemsMarkup(galleryItems);
+galleryContainerEl.insertAdjacentHTML("beforeend", imagesMarkup);
 
-const cardsMarkup = createImageGallery(galleryItems);
-imageGallery.innerHTML = cardsMarkup
-imageGallery.addEventListener('click',onPhotoClick)
+function createItemsMarkup(item) {
+  return galleryItems
+    .map(({ preview, original, description }) => {
+      return `<div class="gallery__item">
+      <a class="gallery__link" href="${original.value}">
+        <img
+          class="gallery__image"
+          src="${preview}"
+          data-source="${original}"
+          alt="${description}"
+        />
+      </a>
+    </div>`;
+    })
+    .join("");
+}
+const onContainerClick = (e) => {
+  e.preventDefault();
 
+  if (e.target.classList.contains("gallery")) return;
+    const source = e.target.dataset.source;
+    
+  const instance = basicLightbox.create(`
+    <img src="${source}"width="800" height="600">`);
 
-function createImageGallery(galleryItems) {
-    return galleryItems.map((gallery) => {
-        return `
-            <div class="gallery__item">
-                <a class="gallery__link" href="large-image.jpg">
-                <img
-                    class="gallery__image"
-                    src="${gallery.preview}"
-                    data-source="${gallery.original}"
-                    alt="${gallery.description}"
-                />
-                </a>
-            </div>`;
-        })
-        .join('');
-    }
- 
-function onPhotoClick(e) {
-
-    e.preventDefault();
-    if (e.target.nodeName !== "IMG") {
-        return;
-    }
-    const instance = basicLightbox.create(`
-    <img src="${e.target.dataset.source}">
-    `)
-    instance.show();
-
-    imageGallery.addEventListener('keydown', (e) => {
-        if (e.code === "Escape") {
-            instance.close()
-        }
-    });
+  instance.show();
 };
 
+galleryContainerEl.addEventListener("click", onContainerClick);
