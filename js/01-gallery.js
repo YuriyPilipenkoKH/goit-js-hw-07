@@ -30,6 +30,13 @@ const onContainerClick = (e) => {
     <img src="${source}"width="800" height="600">`);
 
   instance.show();
+
+
+  galleryContainerEl.addEventListener('keydown', (e) => {
+    if (e.code === "Escape") {
+        instance.close()
+    }
+},  );
 };
 
 galleryContainerEl.addEventListener("click", onContainerClick);
